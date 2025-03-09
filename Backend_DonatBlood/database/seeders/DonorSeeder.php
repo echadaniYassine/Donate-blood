@@ -9,6 +9,6 @@ class DonorSeeder extends Seeder
 {
     public function run()
     {
-        Donor::factory(10)->create();
+        Donor::factory(5)->create();
     }
 }

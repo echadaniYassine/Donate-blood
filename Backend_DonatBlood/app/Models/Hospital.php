@@ -1,5 +1,7 @@
 <?php
 
+// app/Models/Hospital.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +12,21 @@ class Hospital extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'address',
-        'contact_number'
+        'user_id', 'name', 'location', 'contact_info',
     ];
 
-    public function donations()
+    public function user()
     {
-        return $this->hasMany(DonationHistory::class); // ✅ FIXED: Added relationship
+        return $this->belongsTo(User::class);
+    }
+
+    public function donationRequests()
+    {
+        return $this->hasMany(DonationRequest::class);
+    }
+
+    public function bloodStock()
+    {
+        return $this->hasMany(BloodStock::class);
     }
 }

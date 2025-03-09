@@ -10,11 +10,11 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('message');
-            $table->enum('status', ['unread', 'read'])->default('unread');
-            $table->timestamp('read_at')->nullable(); // ✅ Add this line
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }
+
     public function down(): void {
         Schema::dropIfExists('notifications');
     }

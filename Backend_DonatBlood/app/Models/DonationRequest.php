@@ -1,5 +1,7 @@
 <?php
 
+// app/Models/DonationRequest.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,24 +12,21 @@ class DonationRequest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'recipient_id',
-        'hospital_id',
-        'status',
-        'request_date'
+        'hospital_id', 'blood_type_needed', 'quantity_needed', 'status', 'location', 'posted_at',
     ];
-
-    public function recipient()
-    {
-        return $this->belongsTo(Recipient::class);
-    }
-
-    public function donor()
-    {
-        return $this->belongsTo(Donor::class);
-    }
 
     public function hospital()
     {
         return $this->belongsTo(Hospital::class);
+    }
+
+    public function donationApplications()
+    {
+        return $this->hasMany(DonationApplication::class);
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'recipient');
     }
 }

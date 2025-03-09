@@ -1,5 +1,7 @@
 <?php
 
+// database/factories/DonorFactory.php
+
 namespace Database\Factories;
 
 use App\Models\Donor;
@@ -14,11 +16,12 @@ class DonorFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'phone' => $this->faker->phoneNumber,
+            'CIN' => $this->faker->unique()->word,
             'blood_type' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']),
-            'last_donation_date' => $this->faker->optional()->date(), // ✅ Sometimes donors haven't donated yet
-            'availability_status' => $this->faker->boolean(),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'last_donation_date' => $this->faker->date(),
         ];
     }
 }

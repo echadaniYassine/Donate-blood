@@ -1,44 +1,72 @@
 <?php
 
+// app/Http/Controllers/DonorController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Donor;
+use App\Models\DonationApplication;
+use App\Models\DonationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controller;  // This is the base controller class
 
-class DonorController extends Controller
+class DonorController extends Controller // Ensure it extends the Controller base class
 {
-    public function index()
+    public function __construct()
     {
-        return response()->json(Donor::with('user')->get());
+        // Middleware ensures only authenticated users can access these methods
+        $this->middleware('auth:sanctum');
     }
 
-    public function store(Request $request)
+    public function applyForDonation(Request $request)
     {
+        // Validate the donation application
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'blood_type' => 'required|string',
-            'last_donation_date' => 'nullable|date',
-            'availability_status' => 'boolean',
+            'donation_request_id' => 'required|exists:donation_requests,id',
+            'appointment_date' => 'required|date|after:today',
         ]);
 
-        $donor = Donor::create($request->all());
-        return response()->json($donor, 201);
+        // Create the donation application
+        $application = DonationApplication::create([
+            'donor_id' => Auth::user()->donor->id,
+            'donation_request_id' => $request->donation_request_id,
+            'appointment_date' => $request->appointment_date,
+            'status' => 'applied',
+        ]);
+
+        return response()->json(['message' => 'Donation application created successfully', 'application' => $application]);
     }
 
-    public function show(Donor $donor)
+    public function viewProfile(Request $request)
     {
-        return response()->json($donor->load('user'));
+        $donor = $request->user()->donor;
+
+        return response()->json([
+            'donor' => $donor,
+        ]);
     }
 
-    public function update(Request $request, Donor $donor)
+    /**
+     * Update donor profile
+     */
+    public function updateProfile(Request $request)
     {
-        $donor->update($request->all());
-        return response()->json($donor);
-    }
+        $donor = $request->user()->donor;
 
-    public function destroy(Donor $donor)
-    {
-        $donor->delete();
-        return response()->json(['message' => 'Donor deleted successfully']);
+        // Validate only the fields that are being updated
+        $request->validate([
+            'name' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'blood_type' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'address' => 'nullable|string',
+        ]);
+
+        $donor->update($request->only(['name', 'phone', 'blood_type', 'address']));
+
+        return response()->json([
+            'message' => 'Donor profile updated successfully',
+            'donor' => $donor,
+        ]);
     }
 }

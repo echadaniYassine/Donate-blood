@@ -1,5 +1,7 @@
 <?php
 
+// app/Models/Donor.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,10 +12,7 @@ class Donor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'blood_type',
-        'last_donation_date',
-        'availability_status'
+        'user_id', 'name', 'email', 'phone', 'CIN', 'blood_type', 'last_donation_date',
     ];
 
     public function user()
@@ -21,8 +20,18 @@ class Donor extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function donations()
+    public function donationApplications()
     {
-        return $this->hasMany(DonationHistory::class); // ✅ FIXED: Added relationship
+        return $this->hasMany(DonationApplication::class);
+    }
+
+    public function donationHistories()
+    {
+        return $this->hasMany(DonationHistory::class);
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'recipient');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/HospitalController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Hospital;
@@ -7,37 +9,35 @@ use Illuminate\Http\Request;
 
 class HospitalController extends Controller
 {
-    public function index()
+
+
+    public function viewProfile(Request $request)
     {
-        return response()->json(Hospital::all());
+        $hospital = $request->user()->hospital;
+
+        return response()->json([
+            'hospital' => $hospital,
+        ]);
     }
 
-    public function store(Request $request)
+    /**
+     * Update hospital profile
+     */
+    public function updateProfile(Request $request)
     {
+        $hospital = $request->user()->hospital;
+
         $request->validate([
-            'name' => 'required|string',
-            'address' => 'required|string',
-            'contact_number' => 'required|string',
+            'hospital_name' => 'nullable|string',
+            'location' => 'nullable|string',
+            'contact_number' => 'nullable|string',
         ]);
 
-        $hospital = Hospital::create($request->all());
-        return response()->json($hospital, 201);
-    }
+        $hospital->update($request->only(['hospital_name', 'location', 'contact_number']));
 
-    public function show(Hospital $hospital)
-    {
-        return response()->json($hospital);
-    }
-
-    public function update(Request $request, Hospital $hospital)
-    {
-        $hospital->update($request->all());
-        return response()->json($hospital);
-    }
-
-    public function destroy(Hospital $hospital)
-    {
-        $hospital->delete();
-        return response()->json(['message' => 'Hospital deleted successfully']);
+        return response()->json([
+            'message' => 'Hospital profile updated successfully',
+            'hospital' => $hospital,
+        ]);
     }
 }

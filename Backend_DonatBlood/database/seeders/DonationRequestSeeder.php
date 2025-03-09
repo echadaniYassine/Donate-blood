@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\DonationRequest;
 use App\Models\Donor;
-use App\Models\Recipient;
 use App\Models\Hospital;
 
 class DonationRequestSeeder extends Seeder
@@ -13,19 +12,13 @@ class DonationRequestSeeder extends Seeder
     public function run()
     {
         $donors = Donor::all();
-        $recipients = Recipient::all();
         $hospitals = Hospital::all();
 
-        if ($donors->isEmpty() || $recipients->isEmpty() || $hospitals->isEmpty()) {
-            return;
-        }
-
-        DonationRequest::factory(10)->create()->each(function ($request) use ($donors, $recipients, $hospitals) {
-            $request->update([
-                'recipient_id' => $recipients->random()->id,
-                'donor_id' => $donors->random()->id,
-                'hospital_id' => $hospitals->random()->id,
-            ]);
+        DonationRequest::factory(10)->create()->each(function ($request) use ($donors, $hospitals) {
+            // Set donor_id and hospital_id during creation
+            $request->donor_id = $donors->random()->id;
+            $request->hospital_id = $hospitals->random()->id;
+            $request->save(); // Save the changes
         });
     }
 }

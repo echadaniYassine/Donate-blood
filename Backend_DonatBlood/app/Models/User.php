@@ -1,22 +1,34 @@
 <?php
 
+// app/Models/User.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Str;
 
-class User extends Authenticatable
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'role', 'blood_type', 'remember_token'
+        'role',
     ];
 
-    protected $hidden = ['password', 'remember_token'];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
-    protected $casts = ['password' => 'hashed'];
+    public function donor()
+    {
+        return $this->hasOne(Donor::class);
+    }
+
+    public function hospital()
+    {
+        return $this->hasOne(Hospital::class);
+    }
 }
