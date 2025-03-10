@@ -18,8 +18,8 @@ class HospitalFactory extends Factory
             'user_id' => $user->id,
             'name' => $this->faker->company(),
             'location' => $this->faker->address(),
-            'contact_email' => $this->faker->unique()->companyEmail(),
-            'contact_phone' => $this->faker->unique()->phoneNumber(),
+            'email' => $this->faker->unique()->companyEmail(),
+            'phone' => $this->faker->unique()->phoneNumber(),
         ];
     }
 }

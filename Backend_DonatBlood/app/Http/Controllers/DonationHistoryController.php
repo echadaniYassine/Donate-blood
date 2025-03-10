@@ -1,68 +1,38 @@
 <?php
 
+// app/Http/Controllers/DonationHistoryController.php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\DonationHistory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DonationHistoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the donation histories for the authenticated donor.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(DonationHistory::all(), 200);
+        $donor = $request->user()->donor;
+
+        // Return donation history for the logged-in donor only
+        return response()->json($donor->donationHistories, 200);
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'donor_id' => 'required|exists:users,id',
-            'blood_type' => 'required|string|max:5',
-            'donation_date' => 'required|date',
-            'volume_donated' => 'required|integer', 
-        ]);
-    
-        $history = DonationHistory::create($request->all());
-    
-        return response()->json($history, 201);
-    }
-
-    /**
-     * Display the specified resource.
+     * Display the specified donation history.
      */
     public function show(DonationHistory $donationHistory)
     {
-        return response()->json($donationHistory, 200);
-    }
+        // Ensure that the logged-in user has access to this donation history
+        $donor = Auth::user()->donor;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, DonationHistory $donationHistory)
-    {
-        $request->validate([
-            'donor_id' => 'sometimes|exists:users,id',
-            'blood_type' => 'sometimes|string|max:5',
-            'donation_date' => 'sometimes|date',
-        ]);
-
-        $donationHistory->update($request->all());
+        if ($donationHistory->donor_id !== $donor->id) {
+            return response()->json(['error' => 'Unauthorized access'], 403);
+        }
 
         return response()->json($donationHistory, 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DonationHistory $donationHistory)
-    {
-        $donationHistory->delete();
-
-        return response()->json(null, 204);
     }
 }

@@ -14,12 +14,14 @@ class DonorFactory extends Factory
 
     public function definition()
     {
+        $user = User::factory()->state(['role' => 'donor'])->create();
+
         return [
             'user_id' => User::factory(),
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
-            'CIN' => $this->faker->unique()->word,
+            'cin' => $this->faker->unique()->word,
             'blood_type' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']),
             'last_donation_date' => $this->faker->date(),
         ];

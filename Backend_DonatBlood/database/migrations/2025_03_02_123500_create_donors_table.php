@@ -12,13 +12,12 @@ class CreateDonorsTable extends Migration
         Schema::create('donors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('CIN')->unique();
+            $table->string('cin')->unique();
             $table->enum('blood_type', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']);
+            $table->string('email')->nullable();  // Copy email from the User model
+            $table->string('phone');  // Copy phone from the User model
             $table->date('last_donation_date')->nullable();
+            $table->boolean('availability')->default(true);  // Add the 'availability' column with a default value
             $table->timestamps();
         });
     }

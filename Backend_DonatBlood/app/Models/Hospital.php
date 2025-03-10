@@ -12,7 +12,7 @@ class Hospital extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'name', 'location', 'contact_info',
+        'user_id', 'location', 'name'
     ];
 
     public function user()

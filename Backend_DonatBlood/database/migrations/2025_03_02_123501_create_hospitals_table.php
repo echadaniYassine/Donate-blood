@@ -12,9 +12,9 @@ class CreateHospitalsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->unique();;
             $table->string('location');
-            $table->string('contact_email')->unique(); // Add this
-            $table->string('contact_phone')->unique(); // Add this
             $table->timestamps();
         });
     }

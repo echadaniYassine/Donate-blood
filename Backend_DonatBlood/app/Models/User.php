@@ -13,8 +13,11 @@ class User extends Model
 {
     use HasFactory, Notifiable, HasApiTokens;
 
-    protected $fillable = [
-        'role',
+    protected $fillable = ['name', 'email', 'phone', 'password', 'role'];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     protected $casts = [
@@ -32,3 +35,4 @@ class User extends Model
         return $this->hasOne(Hospital::class);
     }
 }
+

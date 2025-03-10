@@ -12,7 +12,11 @@ class Donor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'name', 'email', 'phone', 'CIN', 'blood_type', 'last_donation_date',
+        'user_id', 'cin', 'blood_type', 'last_donation_date', 'availability', 'email', 'phone' // Include email and phone
+    ];
+
+    protected $casts = [
+        'last_donation_date' => 'date',
     ];
 
     public function user()

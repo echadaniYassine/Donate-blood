@@ -6,27 +6,50 @@ namespace App\Http\Controllers;
 
 use App\Models\DonationApplication;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DonationApplicationController extends Controller
 {
-    public function updateStatus(Request $request, $id)
+    /**
+     * Display a listing of donation applications.
+     */
+    public function index()
     {
-        // Validate the status update
-        $request->validate([
-            'status' => 'required|in:applied,accepted,rejected,completed',
-        ]);
-
-        $application = DonationApplication::findOrFail($id);
-        $application->status = $request->status;
-        $application->save();
-
-        return response()->json(['message' => 'Application status updated successfully', 'application' => $application]);
+        $applications = DonationApplication::all();
+        return response()->json(['applications' => $applications]);
     }
 
-    public function viewApplications($donorId)
+    /**
+     * Store a newly created donation application.
+     */
+    public function store(Request $request)
     {
-        $applications = DonationApplication::where('donor_id', $donorId)->get();
+        // Validate the donation application
+        $request->validate([
+            'donation_request_id' => 'required|exists:donation_requests,id',
+            'appointment_date' => 'required|date|after:today',
+        ]);
 
-        return response()->json(['applications' => $applications]);
+        // Ensure the authenticated user is a donor
+        if (!Auth::user()->donor) {
+            return response()->json(['error' => 'Only donors can apply for donation'], 403);
+        }
+
+        $application = DonationApplication::create([
+            'donor_id' => Auth::user()->donor->id,
+            'donation_request_id' => $request->donation_request_id,
+            'appointment_date' => $request->appointment_date,
+            'status' => 'applied',
+        ]);
+
+        return response()->json(['message' => 'Donation application created successfully', 'application' => $application], 201);
+    }
+
+    /**
+     * Display a specific donation application.
+     */
+    public function show(DonationApplication $donationApplication)
+    {
+        return response()->json($donationApplication);
     }
 }
