@@ -38,7 +38,7 @@ class DonationRequestController extends Controller
 
         // Validate donation request data
         $request->validate([
-            'blood_type' => 'required|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'blood_type_needed' => 'required|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
             'quantity_needed' => 'required|integer|min:1',
         ]);
 
@@ -54,6 +54,7 @@ class DonationRequestController extends Controller
             'donation_request' => $donationRequest,
         ], 201);
     }
+
 
     /**
      * Display the specified donation request.

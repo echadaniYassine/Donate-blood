@@ -27,25 +27,41 @@ class DonorController extends Controller // Ensure it extends the Controller bas
             'appointment_date' => 'required|date|after:today',
         ]);
 
+        // Check if the authenticated user has a donor profile
+        $donor = Auth::user()->donor;
+        if (!$donor) {
+            return response()->json(['message' => 'Donor profile not found'], 404);
+        }
+
         // Create the donation application
         $application = DonationApplication::create([
-            'donor_id' => Auth::user()->donor->id,
+            'donor_id' => $donor->id,  // Get the donor ID from the authenticated user
             'donation_request_id' => $request->donation_request_id,
             'appointment_date' => $request->appointment_date,
-            'status' => 'applied',
+            'status' => 'applied',  // Default status for the application
         ]);
 
-        return response()->json(['message' => 'Donation application created successfully', 'application' => $application]);
+        // Return response
+        return response()->json([
+            'message' => 'Donation application created successfully',
+            'application' => $application,
+        ]);
     }
+
+
 
     public function viewProfile(Request $request)
     {
+        // Get the authenticated donor's profile
         $donor = $request->user()->donor;
 
-        return response()->json([
-            'donor' => $donor,
-        ]);
+        if (!$donor) {
+            return response()->json(['message' => 'Donor profile not found'], 404);
+        }
+
+        return response()->json($donor);
     }
+
 
     /**
      * Update donor profile

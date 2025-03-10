@@ -11,13 +11,12 @@ class CreateHospitalsTable extends Migration
         Schema::create('hospitals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->unique();;
-            $table->string('location');
+            $table->string('name');  // Hospital name
+            $table->string('location');  // Location field (it was missing in your previous migration)
             $table->timestamps();
         });
     }
+
 
     public function down()
     {

@@ -75,22 +75,25 @@ class AuthController extends Controller
     // Handle hospital registration
     private function registerHospital(User $user, Request $request)
     {
+        // Validate location field (along with other user details if needed)
         $hospitalValidator = Validator::make($request->all(), [
-            'location' => 'required|string|max:255',
+            'location' => 'required|string|max:255',  // Ensuring location is provided
         ]);
 
         if ($hospitalValidator->fails()) {
             return response()->json(['errors' => $hospitalValidator->errors()], 422);
         }
 
+        // Create the hospital entry associated with the user
         $hospital = Hospital::create([
-            'user_id' => $user->id,
-            'location' => $request->location,
-            'name' => $request->name, // Hospital name
+            'user_id' => $user->id,  // Associate the hospital with the user
+            'location' => $request->location,  // Location is stored here
+            'name' => $request->name,  // Hospital name
         ]);
 
         return response()->json(['message' => 'Hospital registered successfully', 'user' => $user, 'hospital' => $hospital], 201);
     }
+
 
     /**
      * Login user and return token

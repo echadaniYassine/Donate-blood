@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('donors')->group(function () {
         Route::get('profile', [DonorController::class, 'viewProfile']);
         Route::put('profile', [DonorController::class, 'updateProfile']);
+        // ✅ Donation Application Routes (Moved apply logic here)
+        Route::resource('donation-applications', DonationApplicationController::class)->only(['index', 'show', 'store']);
     });
 
     // ✅ Hospital Routes
@@ -43,10 +45,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('donation-history', DonationHistoryController::class)->only(['index', 'show']);
 
     // ✅ Blood Stock Routes
-    Route::resource('blood-stocks', BloodStockController::class)->only(['index', 'show', 'update']);
+    Route::get('blood-stocks', [BloodStockController::class, 'index']);
+    Route::get('blood-stocks/{bloodStock}', [BloodStockController::class, 'show']);
+    Route::put('blood-stocks/{bloodStock}', [BloodStockController::class, 'update']);
 
-    // ✅ Donation Application Routes (Moved apply logic here)
-    Route::resource('donation-applications', DonationApplicationController::class)->only(['index', 'show', 'store']);
+
 
     // ✅ Notifications Route (Only for the logged-in user)
     Route::get('notifications', [NotificationController::class, 'index']);
