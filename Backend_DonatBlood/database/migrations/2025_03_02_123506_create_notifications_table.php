@@ -8,7 +8,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Delete notifications when user is deleted
+            $table->string('type'); // Type of notification (appointment, success, request, etc.)
             $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->timestamps();

@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Models\DonationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
+use App\Models\Donor;
 
 class DonationRequestController extends Controller
 {
@@ -48,6 +50,17 @@ class DonationRequestController extends Controller
             'blood_type' => $request->blood_type,
             'quantity_needed' => $request->quantity_needed,
         ]);
+
+        // ✅ Notify all donors with the matching blood type
+        $donors = Donor::where('blood_type', $request->blood_type_needed)->get();
+        foreach ($donors as $donor) {
+            Notification::create([
+                'user_id' => $donor->user_id, // Donor's user ID
+                'message' => "🩸 Urgent: A hospital needs your blood type ({$request->blood_type_needed}). Please consider donating!",
+                'type' => 'donation_request',
+                'is_read' => false,
+            ]);
+        }
 
         return response()->json([
             'message' => 'Donation request created successfully',

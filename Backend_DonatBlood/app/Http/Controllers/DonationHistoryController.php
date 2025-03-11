@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use App\Models\Notification;
 use App\Models\BloodStock; // Add this at the top
 
 
@@ -73,6 +74,12 @@ class DonationHistoryController extends Controller
             // Update the donation application status to 'donated'
             $donationApplication->update(['status' => 'donated']);
 
+            Notification::create([
+                'user_id' => $donationApplication->donor->user_id, // Donor's user ID
+                'message' => "Thank you for your generous blood donation! Your contribution saves lives. ❤️",
+                'type' => 'success',
+                'is_read' => false,
+            ]);
             // Update the donation request status to 'fulfilled' and set the donor_id
             $donationApplication->donationRequest->update([
                 'status' => 'fulfilled',

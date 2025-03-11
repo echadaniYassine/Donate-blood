@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    // ✅ Notifications Route (Only for the logged-in user)
+    // ✅ Notifications Route 
     Route::get('notifications', [NotificationController::class, 'index']);
-});
+    Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    });
