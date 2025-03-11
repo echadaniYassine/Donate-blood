@@ -88,7 +88,10 @@ class AuthController extends Controller
         $hospital = Hospital::create([
             'user_id' => $user->id,  // Associate the hospital with the user
             'location' => $request->location,  // Location is stored here
-            'name' => $request->name,  // Hospital name
+            'name' => $request->name, 
+            'email' => $user->email,
+            'phone' => $user->phone
+
         ]);
 
         return response()->json(['message' => 'Hospital registered successfully', 'user' => $user, 'hospital' => $hospital], 201);

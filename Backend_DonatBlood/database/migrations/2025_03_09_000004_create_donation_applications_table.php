@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('donor_id')->constrained()->onDelete('cascade');
             $table->foreignId('donation_request_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['applied', 'accepted', 'rejected', 'completed'])->default('applied');
+            $table->enum('status', ['applied', 'accepted', 'rejected', 'completed', 'donated'])->default('applied');
             $table->dateTime('appointment_date')->nullable();
             $table->timestamps();
         });

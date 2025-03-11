@@ -12,7 +12,12 @@ class DonationRequest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'hospital_id', 'blood_type_needed', 'quantity_needed', 'status', 'location', 'posted_at',
+        'hospital_id',
+        'blood_type_needed',
+        'quantity_needed',
+        'status',
+        'location',
+        'posted_at',
     ];
 
     public function hospital()
@@ -28,5 +33,9 @@ class DonationRequest extends Model
     public function notifications()
     {
         return $this->morphMany(Notification::class, 'recipient');
+    }
+    public function donor()
+    {
+        return $this->belongsTo(Donor::class);
     }
 }

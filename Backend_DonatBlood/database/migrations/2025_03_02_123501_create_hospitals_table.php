@@ -11,7 +11,9 @@ class CreateHospitalsTable extends Migration
         Schema::create('hospitals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');  // Hospital name
+            $table->string('name');  
+            $table->string('email')->nullable();  // Copy email from the User model
+            $table->string('phone');  // Copy phone from the User model
             $table->string('location');  // Location field (it was missing in your previous migration)
             $table->timestamps();
         });

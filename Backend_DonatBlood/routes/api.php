@@ -41,9 +41,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // ✅ Donation Request Routes
     Route::resource('donation-requests', DonationRequestController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 
-    // ✅ Donation History Routes (Read-only)
-    Route::resource('donation-history', DonationHistoryController::class)->only(['index', 'show']);
-
+    // ✅ Define a route for marking a donation as donated
+    Route::post('donation-applications/{applicationId}/mark-as-donated', [DonationHistoryController::class, 'markAsDonated']);
+    
     // ✅ Blood Stock Routes
     Route::get('blood-stocks', [BloodStockController::class, 'index']);
     Route::get('blood-stocks/{bloodStock}', [BloodStockController::class, 'show']);
