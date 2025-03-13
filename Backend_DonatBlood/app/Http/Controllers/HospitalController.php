@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/HospitalController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Hospital;
@@ -9,8 +7,7 @@ use Illuminate\Http\Request;
 
 class HospitalController extends Controller
 {
-
-
+    // View hospital profile
     public function viewProfile(Request $request)
     {
         $hospital = $request->user()->hospital;
@@ -20,9 +17,7 @@ class HospitalController extends Controller
         ]);
     }
 
-    /**
-     * Update hospital profile
-     */
+    // Update hospital profile
     public function updateProfile(Request $request)
     {
         $hospital = $request->user()->hospital;
